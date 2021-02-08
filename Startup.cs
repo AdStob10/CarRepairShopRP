@@ -113,34 +113,8 @@ namespace CarRepairShopRP
 
 
 
-           CreateRoles(roleManager);
         }
-
-
-
-        private void  CreateRoles(RoleManager<ApplicationRole> roleManager)
-        {
-            //initializing custom roles 
-  
-            string[] roleNames = { "Admin", "Client", "Mechanic" };
-            Task<IdentityResult> roleResult;
-
-            foreach (var roleName in roleNames)
-            {
-                var roleExist = roleManager.RoleExistsAsync(roleName);
-                roleExist.Wait();
-                if (!roleExist.Result)
-                {
-                    ApplicationRole ap = new ApplicationRole();
-                    ap.Name = roleName;
-                    //create the roles and seed them to the database: Question 1
-                    roleResult =  roleManager.CreateAsync(ap);
-                    roleResult.Wait();
-                }
-            }
-
-
-        }
+ 
 
 
     }
