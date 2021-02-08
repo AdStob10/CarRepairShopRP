@@ -28,4 +28,4 @@ After that he can't modify repair properties or add new parts.
 Client can schedule a appointment to repair shop.
 First he create a "Visit" with proposed date of appointment.
 After that mechanic can accept date or propose another one.
-If mechanic changed the client date, client can only accept new date or cancel visits.
+If mechanic changed the client date, client can only accept new date or cancel visit.
