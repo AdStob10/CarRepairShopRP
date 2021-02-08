@@ -1,0 +1,9 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Confirm email";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4 class="display-4">@Html.DisplayFor(model => model.TempData)</h4>
+<h4>Click <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">here</a> to back to login page</h4>

@@ -1,0 +1,84 @@
+﻿@page
+@model CarRepairShopRP.Pages.ReplacedParts.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<div>
+    <h4>Replaced Part For Repair Number @Model.ReplacedPart.RepairID</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ReplacedPart.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReplacedPart.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ReplacedPart.Manufacturer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReplacedPart.Manufacturer)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ReplacedPart.ProductionDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReplacedPart.ProductionDate)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ReplacedPart.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReplacedPart.Quantity)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ReplacedPart.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReplacedPart.Price)
+        </dd>
+            @if (Model.ReplacedPart.NewPartBill != null)
+            {
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.ReplacedPart.NewPartBill)
+                </dt>
+                <dd class="col-sm-10">
+                    <a asp-page="/Shared/ShowDoc" asp-route-fname="@Model.ReplacedPart.NewPartBill.FileName">Show current bill</a>
+                </dd>
+            }
+        @if (Model.ReplacedPart.OldPartImage != null)
+        {
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ReplacedPart.OldPartImage)
+            </dt>
+            <dd class="col-sm-10">
+                <img src="@("~/imgs/oldparts/"+ Model.ReplacedPart.OldPartImage.FileName)" asp-append-version="true" width="250" height="250" id="oldpart" />
+            </dd>
+        }
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.ReplacedPart.ReplacedPartID">Edit</a> |
+    <a asp-page="/ReplacedParts/Index" asp-route-id="@Model.ReplacedPart.RepairID">Back to Full List of Replaced Parts</a> |
+    <a asp-page="/Repairs/Index" asp-route-id="@Model.ReplacedPart.RepairID">Back to Repairs</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/viewerjs/viewer.js"></script>
+    <script>
+        const viewer = new Viewer(document.getElementById('oldpart'), {
+            inline: true,
+            button: false,
+            navbar: 0,
+            toolbar: false,
+            title: false
+        });
+    </script>
+}
+
+@section Styles {
+    <link href="~/lib/viewerjs/viewer.css" rel="stylesheet">
+}

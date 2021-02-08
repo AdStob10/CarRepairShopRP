@@ -1,0 +1,54 @@
+﻿@page
+@model IndexModel
+@using Microsoft.AspNetCore.Identity
+@using CarRepairShopRP.Areas.Identity.Data
+@inject SignInManager<RepairShopUser> SignInManager
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <div class="row">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            @if (User.IsInRole("Client"))
+            {
+                <div class="col-lg-8 mx-auto">
+                    <h1 class="display-4">Welcome @Html.DisplayFor(model => model.Home.name)!</h1>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><i class="far fa-calendar-check"></i> Check your visits or schedule a new</li>
+                        <li class="list-group-item"> <i class="fas fa-car"></i> Check details about your reported repairs</li>
+                        <li class="list-group-item"><i class="far fa-user"></i> Manage your profile</li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-8 mx-auto">
+                    <h1 class="display-4">Welcome @Html.DisplayFor(model => model.Home.name)!
+                        <small class="text-muted">@Html.DisplayFor(model => model.Home.role)</small></h1>
+                    <p class="lead"><i class="far fa-calendar-check mr-lg-2"></i>You have been assigned to <a asp-page="/Visits/Index" asp-route-searchUser="@User.Identity.Name">@Html.DisplayFor(model => model.Home.visits)</a> visits</p>
+                    <p class="lead"><i class="fas fa-car mr-lg-2"></i>You have been assigned to <a asp-page="/Repairs/Index" asp-route-searchUser="@User.Identity.Name">@Html.DisplayFor(model => model.Home.repairs)</a> repairs</p>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-lg-8 mx-auto">
+                <h1 class="display-4">Welcome to our repair shop !</h1>
+                <p class="lead">We are providing a full car service for reasonable price. Our employees are professionals with a long experience. Sign in and become our customer to</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="far fa-calendar-check"></i> Schedule a visit to our place</li>
+                    <li class="list-group-item"> <i class="fas fa-car"></i> Check details about your reported repair</li>
+                    <li class="list-group-item"><i class="fas fa-box-open"></i> Look into replaced parts</li>
+                    <li class="list-group-item"><i class="fas fa-file-invoice"></i> See invoices</li>
+                    <li class="list-group-item"><i class="far fa-user"></i> Manage your profile</li>
+                </ul>
+                <p class="lead my-lg-5">Click <a class="" asp-area="Identity" asp-page="/Account/Register">here</a> to register  <i class="fas fa-users"></i></p>
+            </div>
+        }
+    </div>
+</div>
+
+
+

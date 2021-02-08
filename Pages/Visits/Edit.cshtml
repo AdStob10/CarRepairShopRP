@@ -1,0 +1,83 @@
+﻿@page
+@model CarRepairShopRP.Pages.Visits.EditModel
+
+@{
+    ViewData["Title"] = "Visit Date";
+
+
+    string disabledString = "";
+    if (Model.Visit.AcceptedMechanic == true)
+        disabledString = "disabled";
+}
+
+<h1>Change or accept visit date</h1>
+
+<h4>Visit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <fieldset @disabledString>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Visit.ID" />
+                <div class="form-group">
+                    <span class="control-label" asp-for="Visit.VisitPurpose"></span>
+                    <textarea asp-for="Visit.VisitPurpose" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <!-- <label asp-for="Visit.PlannedVisitDate" class="control-label"></label> -->
+                    <span class="control-label">Current Date @Html.DisplayFor(model => model.Visit.PlannedVisitDate)</span>
+                    <!-- <input asp-for="Visit.PlannedVisitDate" class="form-control" /> -->
+                    @Html.TextBoxFor(model => model.Visit.PlannedVisitDate, "{0:yyyy-MM-ddTHH:mm}", new { type = "datetime-local", @class = "form-control" })
+                    <small class="form-text text-muted">If you change current date the mechanic/client must accept date again ! </small>
+                    <span asp-validation-for="Visit.PlannedVisitDate" class="text-danger"></span>
+                </div>
+                </fieldset>
+                    @if (User.IsInRole("Client"))
+                    {
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" asp-for="Visit.AcceptedClient">
+                                <label class="custom-control-label" asp-for="Visit.AcceptedClient"></label>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <!--
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Visit.AcceptedMechanic" /> Accept
+                </label>
+            </div>
+            -->
+
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" asp-for="Visit.AcceptedMechanic">
+                                <label class="custom-control-label" asp-for="Visit.AcceptedMechanic"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Visit.VisitMechanic" class="control-label"></label>
+                            <select asp-for="Visit.VisitMechanicID" class="form-control"
+                                    asp-items="@Model.mechanicSL">
+                                <option value="">-- Select Mechanic --</option>
+                            </select>
+                            <span asp-validation-for="Visit.VisitMechanic" class="text-danger" />
+                        </div>
+                    }
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+</form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

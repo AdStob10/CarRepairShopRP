@@ -1,0 +1,111 @@
+﻿@page
+@model CarRepairShopRP.Pages.Repairs.CreateModel
+
+@{
+    ViewData["Title"] = "Report new Repair";
+}
+
+<h1>Report</h1>
+
+<h4>Repair</h4>
+<hr />
+<form method="post">
+    <div class="row justify-content-between">
+        <div class="col-md-4">
+            <h4>Repair Information</h4>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Repair.ProblemDescription" class="control-label"></label>
+                <textarea asp-for="Repair.ProblemDescription" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Repair.ProblemDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Repair.startTime" class="control-label"></label>
+                <input asp-for="Repair.startTime" class="form-control" />
+                <span asp-validation-for="Repair.startTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Repair.WorkPrice" class="control-label"></label>
+                <input asp-for="Repair.WorkPrice" class="form-control" />
+                <span asp-validation-for="Repair.WorkPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Repair.Description" class="control-label"></label>
+                <textarea asp-for="Repair.Description" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Repair.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Repair.Client" class="control-label"></label>
+                <select asp-for="Repair.ClientID" class="form-control"
+                        asp-items="@Model.clientSL">
+                    <option value="">-- Select Client --</option>
+                </select>
+                <span asp-validation-for="Repair.Client" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Repair.RepairState" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Repair.RepairState, new SelectList(Enum.GetValues(typeof(RepairState))), "--- Select state ---", new { @class = "form-control selectpicker" })
+                <span asp-validation-for="Repair.RepairState" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h4>Car Information</h4>
+            <div class="form-group">
+                <label asp-for="Car.Brand" class="control-label"></label>
+                <input asp-for="Car.Brand" class="form-control" />
+                <span asp-validation-for="Car.Brand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Car.Model" class="control-label"></label>
+                <input asp-for="Car.Model" class="form-control" />
+                <span asp-validation-for="Car.Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Car.productionYear" class="control-label"></label>
+                <input asp-for="Car.productionYear" class="form-control" data-date-format="YYYY" id="datepicker" />
+                <span asp-validation-for="Car.productionYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Car.EngineCapacity" class="control-label"></label>
+                <input asp-for="Car.EngineCapacity" class="form-control" />
+                <span asp-validation-for="Car.EngineCapacity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Car.EngineFuel" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Car.EngineFuel, new SelectList(Enum.GetValues(typeof(EngineFuel))), "--- Select fuel type ---", new { @class = "form-control selectpicker" })
+                <span asp-validation-for="Car.EngineFuel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Car.oilChangeDate" class="control-label"></label>
+                <input asp-for="Car.oilChangeDate" class="form-control" />
+                <span asp-validation-for="Car.oilChangeDate" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label asp-for="Repair.ChangeOil" class="control-label"></label>
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Repair.ChangeOil" />
+                    <span asp-validation-for="Repair.ChangeOil" class="text-danger"></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Car.BodyType" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Car.BodyType, new SelectList(Enum.GetValues(typeof(BodyType))), "--- Select body type ---", new { @class = "form-control selectpicker" })
+                <span asp-validation-for="Car.BodyType" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group">
+            <input type="submit" value="Report" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+<div>
+    <a asp-page="Index">Back to Repairs</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/CustomValidation.js"></script>
+}

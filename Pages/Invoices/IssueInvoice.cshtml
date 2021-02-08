@@ -1,0 +1,125 @@
+﻿@page
+@model CarRepairShopRP.Pages.Invoices.IssueInvoiceModel
+
+@{
+    ViewData["Title"] = "Issue Invoice";
+}
+
+<h1><i class="fas fa-file-invoice"></i> Invoice</h1>
+<div class="container">
+    <div class="row py-sm-3">
+        <div class="col-sm-6">
+            <h3>@Html.DisplayFor(model => model.InvoiceModel.CompanyName)</h3>
+            <h4>@Html.DisplayFor(model => model.InvoiceModel.CompanyAddress)</h4>
+            <h4>Phone: @Html.DisplayFor(model => model.InvoiceModel.CompanyPhone)</h4>
+        </div>
+        <div class="col-sm-6">
+            Date: <h4>@Html.DisplayFor(model => model.InvoiceModel.issueDate)</h4>
+        </div>
+    </div>
+    <div>
+        <h4>Bill To</h4>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.InvoiceModel.BillUser.FullName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.InvoiceModel.BillUser.FullName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.InvoiceModel.BillUser.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.InvoiceModel.BillUser.Email)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.InvoiceModel.BillUser.PhoneNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.InvoiceModel.BillUser.PhoneNumber)
+            </dd>
+        </dl>
+    </div>
+    <div class="row py-sm-3">
+        <h4>Description</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Unit Price
+                    </th>
+                    <th>
+                        Amount
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @if (Model.InvoiceModel.Parts != null)
+                {
+
+                    foreach (var item in Model.InvoiceModel.Parts)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @{
+                                    var toString = String.Format("{0:c}", item.Price * item.Quantity);
+                                    @Html.DisplayFor(m => toString);
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td>
+                        Mechanical Service
+                    </td>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.InvoiceModel.WorkCost)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row justify-content-end">
+
+        <div class="col-sm-3">Total cost: @Html.DisplayFor(model => model.InvoiceModel.Sum)</div>
+    </div>
+    <div class="row justify-content-end py-sm-1">
+        <div class="col-sm-3">Issued by: @Html.DisplayFor(model => model.InvoiceModel.IssuedBy)</div>
+    </div>
+    <div class="row justify-content-center py-sm-1">
+        <form method="post">
+            <input hidden asp-for="InvoiceModel.RepairID" />
+            <input hidden asp-for="InvoiceModel.Sum" />
+            <input hidden asp-for="InvoiceModel.issueDate" type="text" />
+            <div class="col-sm-3"><input type="submit" value="Issue Invoice" class="btn btn-primary" /></div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-page="/Repairs/Index">Back to Repairs</a>
+</div>
+
+
+

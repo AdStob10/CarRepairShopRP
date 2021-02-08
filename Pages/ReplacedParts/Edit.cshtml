@@ -1,0 +1,104 @@
+﻿@page
+@model CarRepairShopRP.Pages.ReplacedParts.EditModel
+
+@{
+    ViewData["Title"] = "Edit Replaced Part";
+}
+
+<h1>Edit</h1>
+
+<h4>Replaced Part For Repair Number @Html.DisplayFor(model => model.ReplacedPart.RepairID)</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ReplacedPart.Name" class="control-label"></label>
+                <input asp-for="ReplacedPart.Name" class="form-control" />
+                <span asp-validation-for="ReplacedPart.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReplacedPart.Manufacturer" class="control-label"></label>
+                <input asp-for="ReplacedPart.Manufacturer" class="form-control" />
+                <span asp-validation-for="ReplacedPart.Manufacturer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReplacedPart.ProductionDate" class="control-label"></label>
+                @Html.TextBoxFor(model => model.ReplacedPart.ProductionDate, "{0:yyyy-MM}", new { type = "month", @class = "form-control" })
+                <span asp-validation-for="ReplacedPart.ProductionDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReplacedPart.Quantity" class="control-label"></label>
+                <input asp-for="ReplacedPart.Quantity" class="form-control" />
+                <span asp-validation-for="ReplacedPart.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReplacedPart.Price" class="control-label"></label>
+                <input asp-for="ReplacedPart.Price" class="form-control" />
+                <span asp-validation-for="ReplacedPart.Price" class="text-danger"></span>
+            </div>
+            @if (Model.ReplacedPart.NewPartBill != null)
+            {
+                <a asp-page="/Shared/ShowDoc" asp-route-fname="@Model.ReplacedPart.NewPartBill.FileName">Show current bill</a>
+                <div class="form-group">
+                    <label class="control-label">Bill file</label>
+                    <small class="text-muted">* You can upload any image or pdf/doc</small>
+                    <input asp-for="ReplacedPart.NewPartBill.File" accept="image/*,.pdf,.doc" />
+                    <span asp-validation-for="ReplacedPart.NewPartBill.File" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="control-label">Bill file</label>
+                    <small class="text-muted">* You can upload any image or pdf/doc</small>
+                    <input asp-for="ReplacedPart.NewPartBill.File" accept="image/*,.pdf,.doc" />
+                    <span asp-validation-for="ReplacedPart.NewPartBill.File" class="text-danger"></span>
+                </div>
+            }
+            @if (Model.ReplacedPart.OldPartImage != null)
+            {
+                <div class="form-group">
+                    @Html.DisplayFor(model => model.ReplacedPart.OldPartImage.Title)
+                    <img src="@("~/imgs/oldparts/" + Model.ReplacedPart.OldPartImage.FileName)" asp-append-version="true" width="250" height="250" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="ReplacedPart.OldPartImage" class="control-label"></label>
+                    <input asp-for="ReplacedPart.OldPartImage.Title" class="form-control" />
+                    <span asp-validation-for="ReplacedPart.OldPartImage.Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Old Part Image</label>
+                    <input asp-for="ReplacedPart.OldPartImage.File" accept="image/*" />
+                    <span asp-validation-for="ReplacedPart.OldPartImage.File" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="ReplacedPart.OldPartImage" class="control-label"></label>
+                    <input asp-for="ReplacedPart.OldPartImage.Title" class="form-control" />
+                    <span asp-validation-for="ReplacedPart.OldPartImage.Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Old Part Image</label>
+                    <input asp-for="ReplacedPart.OldPartImage.File" accept="image/*" />
+                    <span asp-validation-for="ReplacedPart.OldPartImage.File" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Change" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="/Repairs/Index" asp-route-id="@Model.ReplacedPart.RepairID">Back to Repairs</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/CustomValidation.js"></script>
+}

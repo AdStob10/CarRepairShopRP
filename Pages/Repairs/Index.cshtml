@@ -1,0 +1,208 @@
+﻿@page "{id:int?}"
+@model CarRepairShopRP.Pages.Repairs.IndexModel
+
+
+@{
+    ViewData["Title"] = "Repairs";
+}
+
+
+@if (User.IsInRole("Client"))
+{
+    <h1><i class="fas fa-car mt-sm-2"></i> List of my reported repairs</h1>
+}
+else
+{
+    <h1><i class="fas fa-car mt-sm-2"></i> All Repairs</h1>
+<p>
+    <a asp-page="Create">Report New Repair</a>
+</p>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find client repair by his name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to all Repairs</a> |
+            <a asp-page="./Index" asp-route-searchUser="@User.Identity.Name">Show repairs assigned to me</a>
+        </p>
+    </div>
+</form>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Repair[0].RepairID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Repair[0].Client)
+            </th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort" asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Repair[0].startTime)
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Repair[0].RepairState)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Repair[0].AssignedMechanic)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.RepairData.Repairs)
+        {
+            string selectedRow = "";
+            if (item.RepairID == Model.RepairID)
+            {
+                selectedRow = "table-success";
+            }
+
+
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepairID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.startTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepairState)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedMechanic.FullName)
+                </td>
+
+                <td>
+                    @if (User.IsInRole("Client"))
+                    {
+                        <a asp-page="./Index" asp-route-id="@item.RepairID">Show Parts</a> @:|
+                        <a asp-page="./Details" asp-route-id="@item.RepairID">Details</a> @:|
+                        if (item.InvoiceIssued == true)
+                        {
+                            <a asp-page="/Invoices/InvoiceDetails" asp-route-id="@item.RepairID">Invoice</a>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-page="./Index" asp-route-id="@item.RepairID">Show Parts</a> @:|
+                        <a asp-page="./Details" asp-route-id="@item.RepairID">Details</a> @:|
+                        <a asp-page="./Edit" asp-route-id="@item.RepairID">Edit</a> @:|
+                        <a asp-page="./Delete" asp-route-id="@item.RepairID">Delete</a> @:|
+                        if (item.InvoiceIssued == false)
+                        {
+                            <a asp-page="/Invoices/IssueInvoice" asp-route-id="@item.RepairID">Issue Invoice</a> @:|
+                        }
+                        else
+                        {
+                            <a asp-page="/Invoices/InvoiceDetails" asp-route-id="@item.RepairID">Invoice</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@if (Model.RepairData.ReplacedParts != null)
+{
+    <h3>
+        <i class="fas fa-box-open"></i> Replaced Parts
+    </h3>
+    <ul class="nav">
+        @if (User.IsInRole("Client"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/ReplacedParts/Index" asp-route-id="@Model.RepairID">Show list in another window</a>
+            </li>
+        }
+        else
+        {
+            @if (!Model.RepairData.blockNewParts)
+            {
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/ReplacedParts/Create" asp-route-id="@Model.RepairID">Add new replaced part</a>
+            </li>
+            }
+            <li class="nav-item">
+                <a class="nav-link" asp-page="/ReplacedParts/Index" asp-route-id="@Model.RepairID">Show list in another window</a>
+            </li>
+        }
+    </ul>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Manufacturer</th>
+            <th>Production Date</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        @foreach (var item in Model.RepairData.ReplacedParts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manufacturer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @if (User.IsInRole("Client"))
+                    {
+                        <a asp-page="/ReplacedParts/Details" asp-route-id="@item.ReplacedPartID">Details</a> @:|
+                    }
+                    else
+                    {
+                        if (Model.RepairData.blockNewParts == false)
+                        {
+                            <a asp-page="/ReplacedParts/Edit" asp-route-id="@item.ReplacedPartID">Edit</a> @:|
+                            <a asp-page="/ReplacedParts/Details" asp-route-id="@item.ReplacedPartID">Details</a> @:|
+                            <a asp-page="/ReplacedParts/Delete" asp-route-id="@item.ReplacedPartID">Delete</a>
+                        }
+                        else
+                        {
+                            <a asp-page="/ReplacedParts/Details" asp-route-id="@item.ReplacedPartID">Details</a> @:|
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+
+}
+
+@{
+    var prevDisabled = !Model.RepairData.Repairs.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.RepairData.Repairs.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.RepairData.Repairs.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.RepairData.Repairs.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

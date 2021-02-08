@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CarRepairShopRP.Areas.Identity.Data
+@inject SignInManager<RepairShopUser> SignInManager
+
+
+
+<ul class="navbar-nav flex-grow-1">
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+    </li>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (User.IsInRole("Client"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Repairs/Index">My Repairs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Visits/Index">My Visits</a>
+            </li>
+        }
+        @if (User.IsInRole("Mechanic"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Repairs/Index">Repairs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Visits/Index">Visits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Users/Index">Users</a>
+            </li>
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Repairs/Index">Repairs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Visits/Index">Visits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/Users/Index">Users</a>
+            </li>
+        }
+    }
+</ul>

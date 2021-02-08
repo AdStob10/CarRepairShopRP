@@ -1,0 +1,135 @@
+﻿@page
+@model CarRepairShopRP.Pages.Visits.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+@if (User.IsInRole("Client"))
+{
+    <h1><i class="far fa-calendar-check"></i> My Visits</h1>
+    <p>
+        <a asp-page="Create">Schedule appointment</a>
+    </p>
+}
+else
+{
+    <h1><i class="far fa-calendar-check"></i> All Visits</h1>
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find client visit by his name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to all Visits</a> |
+            <a asp-page="./Index" asp-route-searchUser="@User.Identity.Name">Show visits assigned to me</a>
+        </p>
+    </div>
+</form>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Visit[0].ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Visit[0].VisitClient)
+            </th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort" asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Visit[0].PlannedVisitDate)
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Visit[0].AcceptedClient)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Visit[0].AcceptedMechanic)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Visit[0].VisitMechanic)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Visit)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VisitClient.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlannedVisitDate)
+                </td>
+                <td>
+                    <div class="custom-control custom-checkbox">
+                        @if (item.AcceptedClient == true)
+                        {
+                            <input disabled id="clientBox" type="checkbox" class="custom-control-input" asp-for="@item.AcceptedClient" checked="checked" />
+                        }
+                        else
+                        {
+                            <input disabled id="clientBox" type="checkbox" class="custom-control-input" asp-for="@item.AcceptedClient" />
+                        }
+                        <label for="clientBox" class="custom-control-label">
+                            <span class="sr-only"></span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <div class="custom-control custom-checkbox">
+                        @if (item.AcceptedMechanic == true)
+                        {
+                            <input disabled id="mechanicBox" type="checkbox" class="custom-control-input" asp-for="@item.AcceptedMechanic" checked="checked" />
+                        }
+                        else
+                        {
+                            <input disabled id="mechanicBox" type="checkbox" class="custom-control-input" asp-for="@item.AcceptedMechanic" />
+                        }
+                        <label for="mechanicBox" class="custom-control-label">
+                            <span class="sr-only"></span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VisitMechanic.FullName)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Change</a> |
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Cancel</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@{
+    var prevDisabled = !Model.Visit.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Visit.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Visit.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Visit.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

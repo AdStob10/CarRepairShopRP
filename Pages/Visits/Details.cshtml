@@ -1,0 +1,75 @@
+﻿@page
+@model CarRepairShopRP.Pages.Visits.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Visit</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Visit.VisitClient)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Visit.VisitClient.FullName)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Visit.PlannedVisitDate)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Visit.PlannedVisitDate)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Visit.AcceptedClient)
+        </dt>
+        <dd class="col-sm-9">
+            <!--Html.DisplayFor(model => model.Visit.AcceptedClient)-->
+            <div class="custom-control custom-checkbox">
+                @if (Model.Visit.AcceptedClient == true)
+                {
+                    <input disabled id="clientBox" type="checkbox" class="custom-control-input" asp-for="@Model.Visit.AcceptedClient" checked="checked" />
+                }
+                else
+                {
+                    <input disabled id="clientBox" type="checkbox" class="custom-control-input" asp-for="@Model.Visit.AcceptedClient" />
+                }
+                <label for="clientBox" class="custom-control-label">
+                    <span class="sr-only"></span>
+                </label>
+            </div>
+            </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Visit.AcceptedMechanic)
+        </dt>
+        <dd class="col-sm-9">
+            <!--@Html.DisplayFor(model => model.Visit.AcceptedMechanic)-->
+            <div class="custom-control custom-checkbox">
+                @if (Model.Visit.AcceptedMechanic == true)
+                {
+                    <input disabled id="mechanicBox" type="checkbox" class="custom-control-input" asp-for="@Model.Visit.AcceptedMechanic" checked="checked" />
+                }
+                else
+                {
+                    <input disabled id="mechanicBox" type="checkbox" class="custom-control-input" asp-for="@Model.Visit.AcceptedMechanic" />
+                }
+                <label for="mechanicBox" class="custom-control-label">
+                    <span class="sr-only"></span>
+                </label>
+            </div>
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Visit.VisitMechanic)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Visit.VisitMechanic.FullName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Visit.ID">Change appointment</a> |
+    <a asp-page="./Index">Back to Visits</a>
+</div>

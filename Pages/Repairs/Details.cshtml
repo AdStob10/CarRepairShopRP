@@ -1,0 +1,170 @@
+﻿@page
+@model CarRepairShopRP.Pages.Repairs.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<br />
+<div>
+    <h4>Repair</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.ProblemDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.ProblemDescription)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.startTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.startTime)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.WorkPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.WorkPrice)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Description)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.RepairState)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.RepairState)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Client)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Client.FullName)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.AssignedMechanic)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.AssignedMechanic.FullName)
+        </dd>
+
+    </dl>
+    <hr />
+    <h4>Car</h4>
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Car.Brand)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Car.Brand)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Car.Model)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Car.Model)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Car.productionYear)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Car.productionYear)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Car.EngineCapacity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Car.EngineCapacity)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Car.EngineFuel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Car.EngineFuel)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Car.oilChangeDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Car.oilChangeDate)
+        </dd>
+        @if (Model.Repair.ChangeOil)
+        {
+            <dt class="col-sm-3">
+            </dt>
+            <dd class="col-sm-10">
+                <span class="bg-danger text-white p-2">REMEBER TO CHANGE OIL !</span>
+            </dd>
+         }
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.Repair.Car.BodyType)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Repair.Car.BodyType)
+    </dd>
+    </dl>
+    <hr />
+    <h4>Replaced Parts</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                   Name
+                </th>
+                <th>
+                    Manufacturer
+                </th>
+                <th>
+                   Production Date
+                </th>
+                <th>
+                  Quantity
+                </th>
+                <th>
+                  Price
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Repair.ReplacedParts)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Manufacturer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductionDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a asp-page="./Details" asp-route-id="@item.ReplacedPartID">Details</a> |
+                        @if (Model.Repair.InvoiceIssued == false)
+                        {
+                            <a asp-page="./Edit" asp-route-id="@item.ReplacedPartID">Edit</a> @:|
+                            <a asp-page= "./Delete" asp-route-id = "@item.ReplacedPartID">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Repair.RepairID">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
