@@ -152,11 +152,11 @@
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
                     <td>
-                        <a asp-page="./Details" asp-route-id="@item.ReplacedPartID">Details</a> |
+                        <a asp-page="/ReplacedParts/Details" asp-route-id="@item.ReplacedPartID">Details</a> |
                         @if (Model.Repair.InvoiceIssued == false)
                         {
-                            <a asp-page="./Edit" asp-route-id="@item.ReplacedPartID">Edit</a> @:|
-                            <a asp-page= "./Delete" asp-route-id = "@item.ReplacedPartID">Delete</a>
+                            <a asp-page="/ReplacedParts/Edit" asp-route-id="@item.ReplacedPartID">Edit</a> @:|
+                            <a asp-page= "/ReplacedParts/Delete" asp-route-id = "@item.ReplacedPartID">Delete</a>
                         }
                     </td>
                 </tr>

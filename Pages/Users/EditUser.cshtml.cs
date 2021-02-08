@@ -48,7 +48,6 @@ namespace CarRepairShopRP.Pages.Users
 
             [Display(Name = "Username")]
             [DataType(DataType.Text)]
-            [Required]
             public string Username { get; set; }
 
             [Display(Name = "First Name")]
@@ -119,6 +118,7 @@ namespace CarRepairShopRP.Pages.Users
 
             if (!ModelState.IsValid)
             {
+                _logger.LogInformation("Model invalid");
                 await LoadAsync(user);
                 return Page();
             }
@@ -157,7 +157,6 @@ namespace CarRepairShopRP.Pages.Users
             }
 
 
-            await _signInManager.RefreshSignInAsync(user);
             
             return RedirectToPage("/Users/Index");
         }

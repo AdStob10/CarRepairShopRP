@@ -10,6 +10,7 @@ using CarRepairShopRP.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using CarRepairShopRP.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace CarRepairShopRP.Pages.Visits
 {
@@ -18,6 +19,7 @@ namespace CarRepairShopRP.Pages.Visits
     {
         private readonly CarRepairShopRP.Data.RepairShopContext _context;
         private readonly UserManager<RepairShopUser> _userManager;
+
 
         public EditModel(CarRepairShopRP.Data.RepairShopContext context, UserManager<RepairShopUser> userManager)
         {
@@ -115,6 +117,8 @@ namespace CarRepairShopRP.Pages.Visits
                         throw;
                     }
                 }
+
+          
             }
 
 

@@ -95,11 +95,11 @@ else
                         <a asp-page="./Details" asp-route-id="@item.RepairID">Details</a> @:|
                         <a asp-page="./Edit" asp-route-id="@item.RepairID">Edit</a> @:|
                         <a asp-page="./Delete" asp-route-id="@item.RepairID">Delete</a> @:|
-                        if (item.InvoiceIssued == false)
+                        if (item.InvoiceIssued == false && item.RepairState == RepairState.Finished)
                         {
                             <a asp-page="/Invoices/IssueInvoice" asp-route-id="@item.RepairID">Issue Invoice</a> @:|
                         }
-                        else
+                        else if (item.InvoiceIssued == true)
                         {
                             <a asp-page="/Invoices/InvoiceDetails" asp-route-id="@item.RepairID">Invoice</a>
                         }

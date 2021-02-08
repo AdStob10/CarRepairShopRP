@@ -98,11 +98,13 @@ namespace CarRepairShopRP.Pages.Repairs
                 {
                     repairsIQ = repairsIQ.Where(s => s.Client.FirstName.Contains(searchString)
                                            || s.Client.LastName.Contains(searchString));
+                    id = null;
                 }
 
                 if (!String.IsNullOrEmpty(searchUser))
                 {
                     repairsIQ = repairsIQ.Where(s => s.AssignedMechanic.UserName == searchUser);
+                    id = null;
                 }
             }
 

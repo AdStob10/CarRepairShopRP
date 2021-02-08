@@ -47,8 +47,8 @@ namespace CarRepairShopRP.Pages.Visits
             else
             {
                 Visit = await _context.Visit
-                           .Include(v => v.AcceptedMechanic)
-                           .Include(v => v.AcceptedClient)
+                           .Include(v => v.VisitClient)
+                           .Include(v => v.VisitMechanic)
                             .FirstOrDefaultAsync(m => m.ID == id);
             }
         
