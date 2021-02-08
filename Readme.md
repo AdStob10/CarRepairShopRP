@@ -12,7 +12,7 @@ With password Test!@#123
 ## Repairs and Cars
 Mechanic can create a "Repair" object which describe the "Car" and main problem.
 Mechanic can specify a repair description and change the status during the process.
-Every mechanic see repairs of all clients and can assigned himself to a specific repair.
+Every mechanic see repairs of all clients and can assigne himself to a specific repair.
 Clients see only their repairs and they can't create or modify repairs. Mechanic is responsible for that.
 
 ## Replaced Parts
