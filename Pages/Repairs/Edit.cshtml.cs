@@ -78,14 +78,19 @@ namespace CarRepairShopRP.Pages.Repairs
                 _logger.LogInformation(repairToUpdate.CarID.ToString());
                 var carToUpdate = await _context.Car.FindAsync(repairToUpdate.CarID);
 
-                carToUpdate.Brand = Repair.Car.Brand;
-                carToUpdate.Model = Repair.Car.Model;
-                carToUpdate.productionYear = Repair.Car.productionYear;
-                carToUpdate.EngineCapacity = Repair.Car.EngineCapacity;
-                carToUpdate.EngineFuel = Repair.Car.EngineFuel;
-                carToUpdate.oilChangeDate = Repair.Car.oilChangeDate;
-                carToUpdate.BodyType = Repair.Car.BodyType;
-                try
+                if (await TryUpdateModelAsync<Car>(carToUpdate, "Repair.Car",
+                    s => s.Brand, s => s.Model, s => s.productionYear, s => s.EngineCapacity, s => s.EngineFuel, s => s.oilChangeDate, s => s.BodyType))
+                {
+                    /*
+                    carToUpdate.Brand = Repair.Car.Brand;
+                    carToUpdate.Model = Repair.Car.Model;
+                    carToUpdate.productionYear = Repair.Car.productionYear;
+                    carToUpdate.EngineCapacity = Repair.Car.EngineCapacity;
+                    carToUpdate.EngineFuel = Repair.Car.EngineFuel;
+                    carToUpdate.oilChangeDate = Repair.Car.oilChangeDate;
+                    carToUpdate.BodyType = Repair.Car.BodyType;
+                        */
+                    try
                     {
                         await _context.SaveChangesAsync();
                     }
@@ -106,6 +111,7 @@ namespace CarRepairShopRP.Pages.Repairs
 
 
                     }
+                }
                 
 
                

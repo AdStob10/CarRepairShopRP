@@ -38,6 +38,7 @@ namespace CarRepairShopRP.Pages.Repairs
                             .Include(r => r.Client)
                             .Include(r => r.AssignedMechanic)
                             .Include(r => r.Car)
+                            .AsNoTracking()
                             .FirstOrDefaultAsync(m => m.RepairID == id);
 
             if (Repair == null)

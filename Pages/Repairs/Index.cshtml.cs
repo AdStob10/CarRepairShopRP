@@ -61,7 +61,7 @@ namespace CarRepairShopRP.Pages.Repairs
                             .Include(r => r.Client)
                             .Where(r => r.Client.UserName == User.Identity.Name)
                             .Include(r => r.AssignedMechanic)
-                            .Include(r => r.ReplacedParts)
+                            //.Include(r => r.ReplacedParts)
                             select r;
 
 
@@ -91,7 +91,7 @@ namespace CarRepairShopRP.Pages.Repairs
                            .Include(r => r.Client)
                            //.Where(r => r.Client.UserName == User.Identity.Name)
                            .Include(r => r.AssignedMechanic)
-                           .Include(r => r.ReplacedParts)
+                          // .Include(r => r.ReplacedParts)
                             select r;
 
                 if (!String.IsNullOrEmpty(searchString))
@@ -121,13 +121,15 @@ namespace CarRepairShopRP.Pages.Repairs
 
             int pageSize = 5;
             RepairData.Repairs = await PaginatedList<Repair>.CreateAsync(
-                repairsIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
+                repairsIQ, pageIndex ?? 1, pageSize);
 
-
+            // Lazy loading for replaced parts
             if ( id != null)
             {
                 RepairID = id.Value;
                 Repair rep = RepairData.Repairs.Single(r => r.RepairID == id.Value);
+                //RepairData.ReplacedParts = rep.ReplacedParts;
+                await _context.Entry(rep).Collection(x => x.ReplacedParts).LoadAsync();
                 RepairData.ReplacedParts = rep.ReplacedParts;
                 RepairData.blockNewParts = rep.InvoiceIssued;
             }
