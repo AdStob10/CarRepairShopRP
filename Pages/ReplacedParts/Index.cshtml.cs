@@ -34,11 +34,17 @@ namespace CarRepairShopRP.Pages.ReplacedParts
             {
                 var user = await _userMananger.GetUserAsync(User);
 
-                ReplacedPart = await _context.ReplacedPart.Include(r => r.Repair).Where(p => p.RepairID == id && p.Repair.ClientID == user.Id).AsNoTracking().ToListAsync();
+                ReplacedPart = await _context.ReplacedPart
+                    .Include(r => r.Repair)
+                    .Where(p => p.RepairID == id && p.Repair.ClientID == user.Id)
+                    .AsNoTracking().ToListAsync();
             }
             else
             {
-                ReplacedPart = await _context.ReplacedPart.Include(r => r.Repair).Where(p => p.RepairID == id ).AsNoTracking().ToListAsync();
+                ReplacedPart = await _context.ReplacedPart
+                    .Include(r => r.Repair)
+                    .Where(p => p.RepairID == id )
+                    .AsNoTracking().ToListAsync();
             }
 
         }

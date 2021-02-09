@@ -18,6 +18,8 @@
 
 
         <div class="col-md-4">
+            <input type="hidden" asp-for="Repair.RowVersion" />
+            <input type="hidden" asp-for="Repair.Car.RowVersion" />
             <fieldset @disabled>
                 <h4>Repair Information</h4>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CarRepairShopRP.Pages.Repairs
 {
-    [Authorize(Roles = "Client,Mechanic")]
+    [Authorize(Roles = "Client,Mechanic, Admin")]
     public class IndexModel : PageModel
     {
         private readonly CarRepairShopRP.Data.RepairShopContext _context;

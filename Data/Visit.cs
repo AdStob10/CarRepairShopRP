@@ -38,5 +38,8 @@ namespace CarRepairShopRP.Data
         public string VisitClientID { get; set; }
         [Display(Name = "Client")]
         public RepairShopUser VisitClient { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

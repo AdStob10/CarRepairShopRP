@@ -23,13 +23,42 @@ namespace CarRepairShopRP.Pages.Users
             _userManager = userManager;
        
         }
-        public IList<RepairShopUser> Users { get; set; }
- 
+        public PaginatedList<RepairShopUser> Users { get; set; }
 
-        public async Task OnGetAsync()
+        public string CurrentFilter { get; set; }
+
+        public async Task OnGetAsync(string searchString, int? pageIndex, string currentFilter)
         {
+            CurrentFilter = searchString;
 
-            Users = await _context.Users.Include(r => r.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
+            if (searchString != null)
+            {
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            /*
+                Users = await _context.Users
+                    .Include(r => r.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                    .AsNoTracking()
+                    .ToListAsync();
+            */
+
+            IQueryable<RepairShopUser> usersIQ = from u in _context.Users.Include(r => r.UserRoles).ThenInclude(ur => ur.Role)
+                                               select u;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                usersIQ = usersIQ.Where(s => s.LastName.Contains(searchString)
+                                       || s.FirstName.Contains(searchString));
+            }
+
+            int pageSize = 10;
+            Users = await PaginatedList<RepairShopUser>.CreateAsync(
+                usersIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
         }
     }
 }

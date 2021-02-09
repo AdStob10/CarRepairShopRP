@@ -52,11 +52,13 @@ namespace CarRepairShopRP.Pages.Users
 
             [Display(Name = "First Name")]
             [DataType(DataType.Text)]
+            [StringLength(100, MinimumLength = 3)]
             [Required]
             public string FirstName { get; set; }
 
 
             [Display(Name = "Last Name")]
+            [StringLength(100, MinimumLength = 3)]
             [DataType(DataType.Text)]
             [Required]
             public string LastName { get; set; }
@@ -64,6 +66,11 @@ namespace CarRepairShopRP.Pages.Users
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [StringLength(100, MinimumLength = 3)]
+            [DataType(DataType.Text)]
+            [Display(Name = "Address")]
+            public string Address { get; set; }
 
             [Display(Name = "Role")]
             public string Role { get; set; }
@@ -88,6 +95,7 @@ namespace CarRepairShopRP.Pages.Users
                 Username = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Address = user.Address,
                 Role = role.FirstOrDefault()
             };
         }
@@ -142,6 +150,11 @@ namespace CarRepairShopRP.Pages.Users
             if (user.FirstName != Input.FirstName)
             {
                 user.FirstName = Input.FirstName;
+            }
+
+            if (user.Address != Input.Address)
+            {
+                user.Address = Input.Address;
             }
 
             var roles = await _userManager.GetRolesAsync(user);

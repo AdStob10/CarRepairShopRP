@@ -40,13 +40,17 @@ namespace CarRepairShopRP.Pages.ReplacedParts
 
                 ReplacedPart = (from rp in _context.ReplacedPart.Include(r => r.OldPartImage).Include(rp => rp.NewPartBill)
                                 join r in _context.Repair on rp.RepairID equals r.RepairID
-                                where r.RepairID == id.Value && r.ClientID == user.Id
-                                select rp).FirstOrDefault();
-                return NotFound();
+                                where rp.ReplacedPartID == id.Value && r.ClientID == user.Id
+                                select rp).AsNoTracking().FirstOrDefault();
+               
             }
             else
             {
-                ReplacedPart = await _context.ReplacedPart.Include(rp => rp.OldPartImage).Include(rp => rp.NewPartBill).FirstOrDefaultAsync(m => m.ReplacedPartID == id);
+                ReplacedPart = await _context.ReplacedPart
+                    .Include(rp => rp.OldPartImage)
+                    .Include(rp => rp.NewPartBill)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.ReplacedPartID == id);
 
             }
 

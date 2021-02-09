@@ -30,7 +30,7 @@ namespace CarRepairShopRP.Pages.Users
                 return NotFound();
             }
 
-            UserToShow = await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).Where(r => r.Id == id).FirstOrDefaultAsync();
+            UserToShow = await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).Where(r => r.Id == id).AsNoTracking().FirstOrDefaultAsync();
             if (User == null)
             {
                 return NotFound();

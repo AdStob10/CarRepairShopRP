@@ -33,6 +33,7 @@ namespace CarRepairShopRP.Data
 
         [Required]
         [Display(Name = "Production Year")]
+        [Range(1900,2100)]
         public uint productionYear { get; set; }
 
 
@@ -55,6 +56,8 @@ namespace CarRepairShopRP.Data
         [Display(Name = "Type of Body")]
         public BodyType BodyType { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
 
         public ICollection<Repair> Repairs { get; set; }
     }

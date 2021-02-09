@@ -35,7 +35,11 @@ namespace CarRepairShopRP.Pages.ReplacedParts
                 return NotFound();
             }
 
-            ReplacedPart = await _context.ReplacedPart.Include(rp => rp.OldPartImage).Include(rp => rp.NewPartBill).FirstOrDefaultAsync(m => m.ReplacedPartID == id);
+            ReplacedPart = await _context.ReplacedPart
+                .Include(rp => rp.OldPartImage)
+                .Include(rp => rp.NewPartBill)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ReplacedPartID == id);
 
             if (ReplacedPart == null)
             {
@@ -57,14 +61,24 @@ namespace CarRepairShopRP.Pages.ReplacedParts
                 return Page();
             }
 
-            var partToUpdate = await _context.ReplacedPart.Include(rp => rp.OldPartImage).Include(rp => rp.NewPartBill).FirstOrDefaultAsync(rp => rp.ReplacedPartID == id.Value);
+            var partToUpdate = await _context.ReplacedPart
+                .Include(rp => rp.OldPartImage)
+                .Include(rp => rp.NewPartBill)
+                .FirstOrDefaultAsync(rp => rp.ReplacedPartID == id.Value);
 
             if (partToUpdate == null)
                 return NotFound();
 
+            _context.Entry(partToUpdate)
+               .Property("RowVersion").OriginalValue = ReplacedPart.RowVersion;
+
             if (await TryUpdateModelAsync<ReplacedPart>(partToUpdate, "ReplacedPart",
                 p => p.Name, p => p.Manufacturer, p => p.ProductionDate, p => p.Quantity, p => p.Price))
             {
+
+
+              
+
                 string wwwRoot = _hostEnviroment.WebRootPath;
                 if (ReplacedPart.OldPartImage.File != null)
                 {
@@ -145,17 +159,32 @@ namespace CarRepairShopRP.Pages.ReplacedParts
                     {
                         await _context.SaveChangesAsync();
                     }
-                    catch (DbUpdateConcurrencyException)
+                    catch (DbUpdateConcurrencyException ex)
                     {
-                        if (!ReplacedPartExists(ReplacedPart.ReplacedPartID))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                    var exceptionEntry = ex.Entries.Single();
+                    var databaseEntry = exceptionEntry.GetDatabaseValues();
+                    if (databaseEntry == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Unable to save. " +
+                            "The replaced part was deleted by another user.");
+                        return Page();
                     }
+
+                    var dbValues = (ReplacedPart)databaseEntry.ToObject();
+                    ModelState.AddModelError(string.Empty,
+                     "The Replaced Part you attempted to edit "
+                   + "was modified by another user after you. The "
+                   + "edit operation was canceled and the current values in the database "
+                   + "have been displayed. If you still want to edit this part, click "
+                   + "the Save button again.");
+
+
+                    ReplacedPart.RowVersion = (byte[])dbValues.RowVersion;
+                    // Clear the model error for the next postback.
+                    ModelState.Remove("ReplacedPart.RowVersion");
+
+                    return Page();
+                }
                
             }
             return RedirectToPage("/Repairs/Index", "id", new { id = partToUpdate.RepairID });

@@ -30,15 +30,20 @@ namespace CarRepairShopRP.Pages.ReplacedParts
 
         [BindProperty]
         public ReplacedPart ReplacedPart { get; set; }
+        public string ConcurrencyErrorMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, bool? concurrencyError)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-                ReplacedPart = await _context.ReplacedPart.Include(rp => rp.OldPartImage).Include(rp => rp.NewPartBill).FirstOrDefaultAsync(m => m.ReplacedPartID == id);
+                ReplacedPart = await _context.ReplacedPart
+                .Include(rp => rp.OldPartImage)
+                .Include(rp => rp.NewPartBill)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ReplacedPartID == id);
 
      
 
@@ -50,6 +55,15 @@ namespace CarRepairShopRP.Pages.ReplacedParts
             if (!RepairNotClosed(ReplacedPart.RepairID))
                 return NotFound();
 
+            if (concurrencyError.GetValueOrDefault())
+            {
+                ConcurrencyErrorMessage = "The Replaced Part you attempted to delete "
+                  + "was modified by another user after you selected delete. "
+                  + "The delete operation was canceled and the current values in the "
+                  + "database have been displayed. If you still want to delete this "
+                  + "record, click the Delete button again.";
+            }
+
             return Page();
         }
 
@@ -60,12 +74,24 @@ namespace CarRepairShopRP.Pages.ReplacedParts
                 return NotFound();
             }
 
-            ReplacedPart = await _context.ReplacedPart.Include(rp => rp.OldPartImage).Include(rp => rp.NewPartBill).Where(rp => rp.ReplacedPartID == id.Value).FirstOrDefaultAsync();
+          
+                try
+                {
+                    if (await _context.ReplacedPart.AnyAsync(
+                        m => m.ReplacedPartID == id))
+                    {
+                        _context.ReplacedPart.Remove(ReplacedPart);
+                        await _context.SaveChangesAsync();
+                    }
+           
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return RedirectToPage("./Delete",
+                        new { concurrencyError = true, id = id });
+                }
 
-            if (ReplacedPart != null)
-            {
-
-                if(ReplacedPart.OldPartImage != null)
+                if (ReplacedPart.OldPartImage != null)
                 {
                     var imagePath = Path.Combine(_hostEnviroment.WebRootPath, "imgs/oldparts", ReplacedPart.OldPartImage.FileName);
                     if (System.IO.File.Exists(imagePath))
@@ -86,9 +112,7 @@ namespace CarRepairShopRP.Pages.ReplacedParts
                     }
                 }
 
-                _context.ReplacedPart.Remove(ReplacedPart);
-                await _context.SaveChangesAsync();
-            }
+           
 
             return RedirectToPage("/Repairs/Index", "id", new { id = ReplacedPart.RepairID });
         }

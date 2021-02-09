@@ -42,6 +42,7 @@ namespace CarRepairShopRP.Pages.Visits
                                .Include(v => v.VisitMechanic)
                                .Include(v => v.VisitClient)
                                .Where(v => v.VisitClientID == user.Id)
+                               .AsNoTracking()
                                .FirstOrDefaultAsync(m => m.ID == id);
             }
             else
@@ -49,6 +50,7 @@ namespace CarRepairShopRP.Pages.Visits
                 Visit = await _context.Visit
                            .Include(v => v.VisitClient)
                            .Include(v => v.VisitMechanic)
+                           .AsNoTracking()
                             .FirstOrDefaultAsync(m => m.ID == id);
             }
         

@@ -1,4 +1,5 @@
-﻿@page 
+﻿@page
+
 @model CarRepairShopRP.Pages.Users.IndexModel
 @{
     ViewData["Title"] = "Users";
@@ -6,7 +7,16 @@
 
 <h1>List of users <i class="fas fa-users"></i></h1>
 
-
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -28,23 +38,23 @@
     <tbody>
         @foreach (var item in Model.Users)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @foreach (var role in item.UserRoles)
-                {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @foreach (var role in item.UserRoles)
+                    {
 
-                    @Html.DisplayFor(modelItem => role.Role.Name)
-                }
-            </td>
+                        @Html.DisplayFor(modelItem => role.Role.Name)
+                    }
+                </td>
                 <td>
                     <a asp-page="./EditUser" asp-route-id="@item.Id">Edit</a> |
                     <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
@@ -53,3 +63,21 @@
         }
     </tbody>
 </table>
+
+@{ 
+    var prevDisabled = !Model.Users.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Users.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Users.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Users.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:int}"
 @model CarRepairShopRP.Pages.Visits.DeleteModel
 
 @{
@@ -6,7 +6,7 @@
 }
 
 <h1>Delete</h1>
-
+<p class="text-danger">@Model.ConcurrencyErrorMessage</p>
 <h3>Are you sure you want to cancel appointment?</h3>
 <div>
     <h4>Visit</h4>
@@ -69,9 +69,10 @@
             @Html.DisplayFor(model => model.Visit.VisitMechanic.FullName)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="Visit.ID" />
+        <input type="hidden" asp-for="Visit.RowVersion" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-page="./Index">Back to Visits</a>
     </form>

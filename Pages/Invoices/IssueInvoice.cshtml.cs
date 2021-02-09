@@ -56,6 +56,7 @@ namespace CarRepairShopRP.Pages.Invoices
             Repair repair = await _context.Repair
                                     .Include(r => r.Client)
                                     .Include(r => r.ReplacedParts)
+                                    .AsNoTracking()
                                     .FirstOrDefaultAsync(r => r.RepairID == id.Value && r.RepairState == RepairState.Finished);
 
             if (repair == null)

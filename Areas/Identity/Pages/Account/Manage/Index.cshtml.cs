@@ -40,6 +40,7 @@ namespace CarRepairShopRP.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "First Name")]
             [DataType(DataType.Text)]
+            [StringLength(100, MinimumLength = 3)]
             [Required]
             public string FirstName { get; set; }
 
@@ -47,12 +48,17 @@ namespace CarRepairShopRP.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Last Name")]
             [DataType(DataType.Text)]
             [Required]
+            [StringLength(100, MinimumLength = 3)]
             public string LastName { get; set; }
     
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
+            [StringLength(100, MinimumLength = 3)]
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+ 
             [Display(Name = "Role")]
             public string RoleName { get; set; }
         }
@@ -70,7 +76,8 @@ namespace CarRepairShopRP.Areas.Identity.Pages.Account.Manage
                 PhoneNumber = phoneNumber,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                RoleName = role.FirstOrDefault()
+                RoleName = role.FirstOrDefault(),
+                Address = user.Address
             };
         }
 
@@ -121,8 +128,12 @@ namespace CarRepairShopRP.Areas.Identity.Pages.Account.Manage
                 user.FirstName = Input.FirstName;
             }
 
+            if (user.Address != Input.Address)
+            {
+                user.Address = Input.Address;
+            }
 
-           // _logger.LogInformation(Input.LastName);
+            // _logger.LogInformation(Input.LastName);
 
             var updateInfo = await _userManager.UpdateAsync(user);
             if(!updateInfo.Succeeded)

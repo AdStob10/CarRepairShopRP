@@ -45,6 +45,7 @@ namespace CarRepairShopRP.Pages.Invoices
                                         .ThenInclude(r => r.ReplacedParts)
                                      .Include( i => i.IssuedBy)
                                      .Include( i => i.IssuedTo)
+                                     .AsNoTracking()
                                     .FirstOrDefaultAsync(i => i.RepairID == id.Value);
 
 
@@ -57,7 +58,7 @@ namespace CarRepairShopRP.Pages.Invoices
 
 
 
-            if (!user.Equals(invoice.IssuedTo) && !User.IsInRole("Mechanic"))
+            if (user.Id != invoice.IssuedTo.Id && User.IsInRole("Client"))
             {
                 return NotFound();
             }

@@ -43,7 +43,7 @@ namespace CarRepairShopRP.Pages.Visits
             if(User.IsInRole("Client"))
             {
                 var user = await _userManager.GetUserAsync(User);
-                Visit = await _context.Visit.Where(v => v.VisitClientID == user.Id).FirstOrDefaultAsync(m => m.ID == id);
+                Visit = await _context.Visit.Where(v => v.VisitClientID == user.Id).AsNoTracking().FirstOrDefaultAsync(m => m.ID == id);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace CarRepairShopRP.Pages.Visits
                                     where r.Name == "Mechanic"
                                     orderby c.FirstName, c.LastName
                                     select c;
-                mechanicSL = new SelectList(mechanicQuery, "Id", "FullName", Visit.VisitMechanic);
+                mechanicSL = new SelectList(mechanicQuery.AsNoTracking(), "Id", "FullName", Visit.VisitMechanic);
             }
 
             return Page();
@@ -89,9 +89,10 @@ namespace CarRepairShopRP.Pages.Visits
 
 
 
-
-            if (await TryUpdateModelAsync<Visit>(visitToUpdate,"Visit",
-                s => s.PlannedVisitDate, s => s.AcceptedClient , s => s.AcceptedMechanic, s => s.VisitMechanicID))
+            _context.Entry(visitToUpdate)
+                   .Property("RowVersion").OriginalValue = Visit.RowVersion;
+            if (await TryUpdateModelAsync<Visit>(visitToUpdate,"Visit"
+             ,s => s.PlannedVisitDate, s => s.AcceptedClient , s => s.AcceptedMechanic, s => s.VisitMechanicID, s => s.VisitPurpose))
             {
                 if (DateTime.Compare(acceptedDate, visitToUpdate.PlannedVisitDate) != 0)
                 {
@@ -101,21 +102,37 @@ namespace CarRepairShopRP.Pages.Visits
                         visitToUpdate.AcceptedMechanic = false;
                 }
 
-
+               
                 try
                 {
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VisitExists(Visit.ID))
+
+                catch (DbUpdateConcurrencyException ex)
+                { 
+                    var exceptionEntry = ex.Entries.Single();
+                    var databaseEntry = exceptionEntry.GetDatabaseValues();
+                    if (databaseEntry == null)
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty, "Unable to save. " +
+                            "The visit was canceled by another user.");
+                        return Page();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    var dbValues = (Visit)databaseEntry.ToObject();
+                    ModelState.AddModelError(string.Empty,
+                     "The Visit you attempted to edit "
+                   + "was modified by another user after you. The "
+                   + "edit operation was canceled and the current values in the database "
+                   + "have been displayed. If you still want to edit this visit, click "
+                   + "the Save button again.");
+
+
+                    Visit.RowVersion = (byte[])dbValues.RowVersion;
+                    // Clear the model error for the next postback.
+                    ModelState.Remove("Visit.RowVersion");
+
+                    return Page();
                 }
 
           

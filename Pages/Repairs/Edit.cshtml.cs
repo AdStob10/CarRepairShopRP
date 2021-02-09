@@ -71,6 +71,9 @@ namespace CarRepairShopRP.Pages.Repairs
             if (repairToUpdate == null)
                 return NotFound();
 
+            _context.Entry(repairToUpdate)
+               .Property("RowVersion").OriginalValue = Repair.RowVersion;
+
             if (await TryUpdateModelAsync<Repair>(repairToUpdate, "Repair",
                  s => s.Description, s => s.startTime, s => s.WorkPrice, s => s.ClientID, s => s.ProblemDescription, s => s.RepairState, s => s.ChangeOil))
             {
@@ -78,9 +81,16 @@ namespace CarRepairShopRP.Pages.Repairs
                 _logger.LogInformation(repairToUpdate.CarID.ToString());
                 var carToUpdate = await _context.Car.FindAsync(repairToUpdate.CarID);
 
+
+                _context.Entry(carToUpdate)
+                   .Property("RowVersion").OriginalValue = Repair.Car.RowVersion;
+
                 if (await TryUpdateModelAsync<Car>(carToUpdate, "Repair.Car",
                     s => s.Brand, s => s.Model, s => s.productionYear, s => s.EngineCapacity, s => s.EngineFuel, s => s.oilChangeDate, s => s.BodyType))
                 {
+
+                   
+
                     /*
                     carToUpdate.Brand = Repair.Car.Brand;
                     carToUpdate.Model = Repair.Car.Model;
@@ -94,8 +104,44 @@ namespace CarRepairShopRP.Pages.Repairs
                     {
                         await _context.SaveChangesAsync();
                     }
-                    catch (DbUpdateConcurrencyException)
+                    catch (DbUpdateConcurrencyException ex)
                     {
+
+                        var exceptionEntry = ex.Entries.Single();
+                        var databaseEntry = exceptionEntry.GetDatabaseValues();
+                        if (databaseEntry == null)
+                        {
+                            ModelState.AddModelError(string.Empty, "Unable to save. " +
+                                "The repair was deleted by another user.");
+                            return Page();
+                        }
+
+                        var dbValues = databaseEntry.ToObject();
+                        ModelState.AddModelError(string.Empty,
+                         "The Repair you attempted to edit "
+                       + "was modified by another user after you. The "
+                       + "edit operation was canceled and the current values in the database "
+                       + "have been displayed. If you still want to edit this record, click "
+                       + "the Save button again.");
+                        // Save the current RowVersion so next postback
+                        // matches unless an new concurrency issue happens.
+                        if(dbValues.GetType().Equals(typeof(Repair)))
+                        {
+                            var rep = (Repair)dbValues;
+                            Repair.RowVersion = (byte[])rep.RowVersion;
+                            ModelState.Remove("Repair.RowVersion");
+                        }
+                        else
+                        {
+                            var car = (Car)dbValues;
+                            Repair.Car.RowVersion = (byte[])car.RowVersion;
+                            ModelState.Remove("Repair.Car.RowVersion");
+                        }
+      
+              
+
+                        return Page();
+                        /*
                         if (!RepairExists(Repair.RepairID))
                         {
                             return NotFound();
@@ -106,7 +152,7 @@ namespace CarRepairShopRP.Pages.Repairs
                         {
                             return NotFound();
                         }
-                        throw;
+                        throw;*/
 
 
 

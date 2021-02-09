@@ -45,7 +45,7 @@ namespace CarRepairShopRP.Pages.Repairs
 
             var user = await _userMananger.GetUserAsync(User);
 
-            if (!user.Equals(Repair.Client) && !User.IsInRole("Mechanic"))
+            if (!user.Equals(Repair.Client) && User.IsInRole("Client"))
             {
                 return NotFound();
             }

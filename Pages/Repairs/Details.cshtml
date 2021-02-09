@@ -1,4 +1,5 @@
-﻿@page
+﻿@page "{id:int}"
+
 @model CarRepairShopRP.Pages.Repairs.DetailsModel
 
 @{
@@ -101,13 +102,13 @@
             <dd class="col-sm-10">
                 <span class="bg-danger text-white p-2">REMEBER TO CHANGE OIL !</span>
             </dd>
-         }
-    <dt class="col-sm-3">
-        @Html.DisplayNameFor(model => model.Repair.Car.BodyType)
-    </dt>
-    <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Repair.Car.BodyType)
-    </dd>
+        }
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Repair.Car.BodyType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Repair.Car.BodyType)
+        </dd>
     </dl>
     <hr />
     <h4>Replaced Parts</h4>
@@ -115,19 +116,19 @@
         <thead>
             <tr>
                 <th>
-                   Name
+                    Name
                 </th>
                 <th>
                     Manufacturer
                 </th>
                 <th>
-                   Production Date
+                    Production Date
                 </th>
                 <th>
-                  Quantity
+                    Quantity
                 </th>
                 <th>
-                  Price
+                    Price
                 </th>
                 <th></th>
             </tr>
@@ -156,7 +157,7 @@
                         @if (Model.Repair.InvoiceIssued == false)
                         {
                             <a asp-page="/ReplacedParts/Edit" asp-route-id="@item.ReplacedPartID">Edit</a> @:|
-                            <a asp-page= "/ReplacedParts/Delete" asp-route-id = "@item.ReplacedPartID">Delete</a>
+                            <a asp-page="/ReplacedParts/Delete" asp-route-id="@item.ReplacedPartID">Delete</a>
                         }
                     </td>
                 </tr>

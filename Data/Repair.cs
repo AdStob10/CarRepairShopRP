@@ -80,5 +80,8 @@ namespace CarRepairShopRP.Data
         [Display(Name = "Assigned Mechanic")]
         public RepairShopUser AssignedMechanic { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
     }
 }

@@ -26,8 +26,10 @@ namespace CarRepairShopRP.Pages.Repairs
 
         [BindProperty]
         public Repair Repair { get; set; }
+        public string ConcurrencyErrorMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+
+        public async Task<IActionResult> OnGetAsync(int? id, bool? concurrencyError)
         {
             if (id == null)
             {
@@ -53,9 +55,19 @@ namespace CarRepairShopRP.Pages.Repairs
 
             var user = await _userMananger.GetUserAsync(User);
 
-            if (!user.Equals(Repair.Client) && !User.IsInRole("Mechanic"))
+            if (!user.Equals(Repair.Client) && User.IsInRole("Client"))
             {
                 return NotFound();
+            }
+
+
+            if (concurrencyError.GetValueOrDefault())
+            {
+                ConcurrencyErrorMessage = "The Repair you attempted to delete "
+                  + "was modified by another user after you selected delete. "
+                  + "The delete operation was canceled and the current values in the "
+                  + "database have been displayed. If you still want to delete this "
+                  + "record, click the Delete button again.";
             }
 
             return Page();
@@ -68,15 +80,31 @@ namespace CarRepairShopRP.Pages.Repairs
                 return NotFound();
             }
 
-            Repair = await _context.Repair.FindAsync(id);
-
-            if (Repair != null)
+            var repToDelete = await _context.Repair.Include(r => r.Car).FirstAsync(r => r.RepairID == id);
+            _context.Entry(repToDelete)
+               .Property("RowVersion").OriginalValue = Repair.RowVersion;
+            _context.Entry(repToDelete.Car)
+                .Property("RowVersion").OriginalValue = Repair.Car.RowVersion;
+            try
             {
-                _context.Repair.Remove(Repair);
-                await _context.SaveChangesAsync();
+                if (repToDelete != null )
+                {
+         
+ 
+                    if (repToDelete.Car != null)
+                    {
+                        _context.Car.Remove(repToDelete.Car);
+                    }
+                    _context.Repair.Remove(repToDelete);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToPage("./Index");
             }
-
-            return RedirectToPage("./Index");
+            catch (DbUpdateConcurrencyException)
+            {
+                return RedirectToPage("./Delete",
+                    new { concurrencyError = true, id = id });
+            }
         }
     }
 }

@@ -15,12 +15,20 @@ namespace CarRepairShopRP.Areas.Identity.Data
         [PersonalData]
         [Column(TypeName="nvarchar(100)")]
         [Required]
+        [StringLength(100,MinimumLength = 3)]
        public string FirstName { get; set; }
         
         [PersonalData]
         [Column(TypeName = "nvarchar(100)")]
         [Required]
+        [StringLength(100, MinimumLength = 3)]
         public string LastName { get; set; }
+
+        [PersonalData]
+        [Column(TypeName = "nvarchar(100)")]
+        [StringLength(100, MinimumLength = 3)]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
 
         [Display(Name =  "Full Name")]
         public string FullName

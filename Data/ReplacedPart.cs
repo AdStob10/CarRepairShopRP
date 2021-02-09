@@ -42,5 +42,8 @@ namespace CarRepairShopRP.Data
 
         [Display(Name = "Bill for New Part")]
         public FileModel NewPartBill { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
