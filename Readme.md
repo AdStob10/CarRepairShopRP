@@ -1,5 +1,6 @@
 ﻿# Car Repair Shop
-This is a simple ASP.NET app for managing a small repair shop
+This is a simple ASP.NET Core 5 app for managing a small repair shop.
+Razor Pages MVVM
 
 ## Accounts
 There are 3 predefined users
